@@ -55,7 +55,8 @@ Ingest Progress:
 
 ## Step 1 — Locate the plan and confirm targets
 
-- Plan path: use `$ARGUMENTS` if given; else try `docs/PLAN.md`, then
+- Plan path: use the path given with the invocation (`$ARGUMENTS` on
+  platforms that substitute it); else try `docs/PLAN.md`, then
   `docs/*PLAN*.md`. If several candidates exist, ask ONE question with your
   recommended pick.
 - Target detection: if the repo already uses `CLAUDE.md` or `AGENT.md` as its

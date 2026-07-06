@@ -69,7 +69,8 @@ tag it, then resume.
 
 ## Inputs to collect (Phase 0)
 
-Use `$ARGUMENTS` when provided; otherwise infer from the repo. If a required
+Use the arguments provided with the invocation (some platforms substitute
+them as `$ARGUMENTS`); otherwise infer from the repo. If a required
 input is genuinely ambiguous, ask **one question at a time** and always attach
 your recommended answer with a one-line reason.
 
