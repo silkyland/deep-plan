@@ -25,8 +25,8 @@ With the [skills CLI](https://github.com/vercel-labs/skills) (works with
 Claude Code, Cursor, Copilot, Codex, OpenCode, and 15+ other agents):
 
 ```bash
-npx skills add <your-github-user>/deep-plan          # both skills
-npx skills add <your-github-user>/deep-plan -s deep-plan-ingest   # just one
+npx skills add silkyland/deep-plan                     # both skills
+npx skills add silkyland/deep-plan -s deep-plan-ingest # just one
 ```
 
 Or manually: copy `skills/<name>/` into your agent's skills folder
