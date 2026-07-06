@@ -1,3 +1,5 @@
+![deep-plan social preview](assets/social-preview.png)
+
 # deep-plan
 
 **Research-first, evidence-first implementation planning for AI coding agents —
