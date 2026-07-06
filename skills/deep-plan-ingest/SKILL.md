@@ -101,6 +101,17 @@ writing that file):
   structure in `ARCHITECTURE.md`, sequencing in `ROADMAP.md`. Cross-link
   instead of copying.
 
+Before reporting, run the **mechanical checks** — commands, not judgment
+calls; all must pass:
+
+1. `wc -l` on the AGENTS-type file → **150 or less**; over budget = cut
+   lines until it passes, never present-and-apologize.
+2. Repo metadata (remotes, hosting, author) must match `git remote -v` /
+   git config output exactly — **never construct a GitHub/GitLab URL from
+   the repo's name**; no remote = say so.
+3. Every claim carried over kept its citation — grep the outputs for
+   bare assertions that lost their `file:line` on the way.
+
 ## Step 6 — Report
 
 End with a concise report:
