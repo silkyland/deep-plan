@@ -103,6 +103,14 @@ your recommended answer with a one-line reason.
   item fails, return to the relevant phase — do not present a failing plan
   as done.
 
+## After acceptance
+
+Once the plan is accepted (and again after implementation makes progress),
+suggest running the companion skill **deep-plan-ingest** to distill the
+plan's verified knowledge into durable project files: `AGENTS.md`,
+`docs/ARCHITECTURE.md`, and `ROADMAP.md`. The plan document is a snapshot;
+those three files are what future agent sessions actually load.
+
 ## If the plan is rejected
 
 Reply briefly: `Checklist item <N> failed acceptance — returning to Phase <X>
