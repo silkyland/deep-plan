@@ -45,6 +45,10 @@ most expensive failure mode in planning.
 3. Expect high token/time cost. That is the price of a plan an implementer can
    execute without guessing.
 
+**Preflight:** if the project root is not a git repository, git-based research
+(trajectory, recent changes) cannot run — note `UNVERIFIED: no git history` in
+your Findings and rely on file timestamps and code archaeology instead.
+
 ## Progress checklist
 
 Copy this into your response and check items off as you complete each phase.
@@ -121,3 +125,13 @@ those three files are what future agent sessions actually load.
 
 Reply briefly: `Checklist item <N> failed acceptance — returning to Phase <X>
 to do the research for real.` Then actually do it.
+
+## When things go wrong
+
+| Situation | Response |
+|-----------|----------|
+| Ground-truth source unavailable (no vendor dir, docs 404) | Tag every framework claim `UNVERIFIED` with the version/path you tried; convert to spike tasks in roadmap Phase 0 |
+| Not a git repo (git trajectory required by protocol) | Skip git-based research; note `UNVERIFIED: no git history` in Findings; rely on file timestamps and code archaeology |
+| User unavailable for Decision Brief Gate (headless) | Proceed on REVERSIBLE decisions; mark every ONE-WAY decision `UNCONFIRMED` in the plan document (protocol Phase 5) |
+| Exploration reveals the task is already done | Stop at Phase 4; present gap analysis showing zero gaps; recommend verification-only plan or closure |
+| Phase 7 self-review fails after multiple attempts | Present the failing checklist item(s) with honest assessment; ask whether to lower the bar or abort |
