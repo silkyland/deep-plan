@@ -52,13 +52,13 @@ Copy this into your response and check items off as you complete each phase.
 
 ```
 Deep Plan Progress:
-- [ ] Phase 0: Frame — task, scope, definition of done, inputs confirmed
+- [ ] Phase 0: Frame — task, scope, definition of done, inputs, research questions
 - [ ] Phase 1: Inventory — codebase mapped with file paths, classified works/half-wired/dead
 - [ ] Phase 2: Ground truth — every framework claim backed by vendor path or versioned doc URL
 - [ ] Phase 3: Adversarial audit — defects with file:line, corrections recorded
 - [ ] Phase 4: Gap analysis — numbered gaps: broken / missing / fights-the-framework
-- [ ] Phase 5: Decisions — one committed recommendation per gap, evidence-cited
-- [ ] Phase 6: Plan document — written with phased roadmap, risks, verification
+- [ ] Phase 5: Decisions — one committed, reversibility-tagged decision per gap; Decision Brief confirmed
+- [ ] Phase 6: Plan document — phased roadmap (skeleton-first, spikes for unknowns), pre-mortem risks, verification
 - [ ] Phase 7: Self-review gate — checklist passed, zero-questions bar met
 ```
 
@@ -84,6 +84,11 @@ your recommended answer with a one-line reason.
 ## Execution rules
 
 - Follow Phases 0–7 in [references/protocol.md](references/protocol.md) **in order**.
+- Phases 1–3 answer the Phase 0 **Research Questions** — research ends when
+  every question is answered or tagged UNVERIFIED, not when every file has
+  been read.
+- Before writing the plan document, pass the **Decision Brief Gate**
+  (protocol, end of Phase 5): a 10–20 line brief in chat, one confirmation.
 - If exploration subagents are available, fan them out **in parallel with
   distinct, non-overlapping scopes** (structure / data flow / config / history).
 - Every bug or finding needs `file:line`. Every framework claim needs a vendor

@@ -44,17 +44,23 @@ Or manually: copy `skills/<name>/` into your agent's skills folder
 
 Seven gated phases, each with exit criteria:
 
-1. **Frame** the task, scope, and non-goals
+1. **Frame** the task, scope, non-goals — and the **Research Questions** the
+   design needs answered (research ends when the questions are answered, not
+   when every file has been read)
 2. **Inventory** the real codebase — every claim with a file path, everything
-   classified works / half-wired / dead
+   classified works / half-wired / dead, plus operational reality (deploys,
+   data scale, background jobs)
 3. **Verify ground truth** against vendor source or versioned official docs —
    never memory
 4. **Adversarially audit** the existing code — defects with `file:line`,
    wrong assumptions recorded as Corrections
 5. **Analyze gaps** — broken vs missing vs fights-the-framework
-6. **Commit to decisions** — one recommendation per gap, evidence-cited, no menus
-7. **Write the plan** — dependency-ordered phased roadmap with entry/exit
-   criteria, effort estimates, risk register, copy-paste-runnable verification —
+6. **Commit to decisions** — one recommendation per gap, evidence-cited,
+   tagged REVERSIBLE or ONE-WAY, no menus — then a compact **Decision Brief**
+   for user confirmation before the document is written
+7. **Write the plan** — dependency-ordered phased roadmap (walking skeleton
+   first for new functionality, a spike task for every surviving UNVERIFIED),
+   pre-mortem-generated risk register, copy-paste-runnable verification —
    then self-grade against the acceptance checklist
 
 The bar: **a junior implementer agent can execute the plan without asking a

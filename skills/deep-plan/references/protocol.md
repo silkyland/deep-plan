@@ -30,10 +30,17 @@ Pin down what is actually being asked before touching anything:
    begins where non-goals are missing.
 4. Identify the risk profile: what breaks, who is affected, and how reversible
    the change is. This calibrates how deep Phases 1–3 must go.
+5. Write the **Research Questions** — a numbered list of the questions the
+   design will need answered (extension points, contracts, invariants, data
+   scale, operational constraints). Phases 1–3 exist to answer this list:
+   every finding cites the question number it answers, questions discovered
+   mid-research are appended to the list, and research is complete when every
+   question is answered with evidence or explicitly tagged `UNVERIFIED` —
+   **not** when every file has been read.
 
-**Exit criteria:** task statement, inputs, non-goals, and definition of done
-are written down. Any open question was asked one-at-a-time with a
-recommended answer.
+**Exit criteria:** task statement, inputs, non-goals, definition of done, and
+a numbered Research Question list are written down. Any open question was
+asked one-at-a-time with a recommended answer.
 
 ---
 
@@ -50,6 +57,10 @@ yet:
 - Existing docs, ADRs, TODO/FIXME markers.
 - Git trajectory: last ~30 commits — what was the team building toward? What
   was recently touched, reverted, or abandoned?
+- **Operational reality:** deploy pipeline, environments, real data scale
+  (row counts, traffic — a migration plan for 100 rows and for 100M rows are
+  different plans), and background jobs (cron/queue) touching the same paths.
+  Plans fail on ops as often as on code.
 
 Classify every component as **works / half-wired / dead code**, each with the
 file path that proves it. "Half-wired" (UI collects a value nothing consumes,
@@ -158,6 +169,10 @@ For each gap:
    radius.
 3. **Commit to ONE recommendation** with a short rationale. The final plan
    contains decisions, not menus. "Do A or B" is a Phase 5 failure.
+4. Tag the decision **REVERSIBLE** (cheap to undo later) or **ONE-WAY**
+   (database choice, public API contract, destructive migration — anything
+   whose undo cost rivals the do cost). ONE-WAY decisions get the extra
+   scrutiny and the user confirmation described at the gate below.
 
 Constraints:
 
@@ -169,8 +184,19 @@ Constraints:
 - Note rejected alternatives in one line each — enough that a reviewer knows
   they were considered.
 
-**Exit criteria:** one committed decision per gap, each with rationale and
-evidence citations. Zero menus.
+**Decision Brief Gate** — before writing a single line of the document,
+present a compact brief in chat: the numbered gaps, the ONE committed
+decision per gap with a one-line rationale, and its reversibility tag.
+10–20 lines total; this is the brief, not the document. Ask for confirmation
+**once**. Changing a decision here costs one message; changing it after
+Phase 6 costs a rewrite. If the user cannot respond (headless/CI run),
+proceed on REVERSIBLE decisions and carry every ONE-WAY decision into the
+document explicitly marked `UNCONFIRMED`.
+
+**Exit criteria:** one committed decision per gap, each with rationale,
+evidence citations, and a reversibility tag. Zero menus. The Decision Brief
+was presented, and every ONE-WAY decision is either user-confirmed or
+marked `UNCONFIRMED`.
 
 ---
 
@@ -182,12 +208,24 @@ structure in [plan-template.md](plan-template.md). Non-negotiables:
 - The **phased roadmap** is dependency-ordered. **Phase 0 of the roadmap is
   always shippable security/correctness fixes** — small, independent,
   mergeable first. Features come after the ground is solid.
+- If the plan builds new functionality, the first roadmap phase after Phase 0
+  delivers a **walking skeleton** — the thinnest end-to-end slice that
+  actually runs — never a layer-by-layer buildout that parks integration
+  risk at the end of the plan.
+- Every **`UNVERIFIED`** tag that survives into the plan becomes a named
+  **spike task**: a small, timeboxed verification step placed FIRST in the
+  roadmap phase that depends on the unknown. No unknown may sit silently
+  under an implementation task.
 - Every roadmap phase has: objective, entry criteria, exit criteria
   (verifiable, not "works well"), effort estimate (S/M/L), and dependencies.
 - Every checklist item names the **concrete files/classes/migrations** it
   touches. "Improve the X system" is banned.
 - The **Corrections** section is mandatory content, not an apology — it is
   the proof the research happened.
+- Generate the **risk register with a pre-mortem**: assume the plan failed
+  three months from now and write the top three causes — those become the
+  risks, each with a mitigation and rollback. Generic risks ("migration
+  might fail") that could appear in any plan are a checklist failure.
 - **Verification** includes both exact automated commands (copy-paste
   runnable) and a manual E2E checklist a human can follow step by step.
 
