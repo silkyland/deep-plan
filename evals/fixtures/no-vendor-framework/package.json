@@ -1,0 +1,11 @@
+{
+  "name": "no-vendor-framework",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Uses Express but node_modules is absent — deep-plan eval fixture for the UNVERIFIED ground-truth path",
+  "main": "src/index.js",
+  "dependencies": {
+    "express": "^4.18.0",
+    "express-rate-limit": "^7.1.0"
+  }
+}

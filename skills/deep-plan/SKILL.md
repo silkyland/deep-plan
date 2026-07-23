@@ -56,7 +56,7 @@ Copy this into your response and check items off as you complete each phase.
 
 ```
 Deep Plan Progress:
-- [ ] Phase 0: Frame — task, scope, definition of done, inputs, research questions
+- [ ] Phase 0: Frame — task, scope, definition of done, inputs, research questions (framing interview: generous, every question a recommended-option choice)
 - [ ] Phase 1: Inventory — codebase mapped with file paths, classified works/half-wired/dead
 - [ ] Phase 2: Ground truth — every framework claim backed by vendor path or versioned doc URL
 - [ ] Phase 3: Adversarial audit — defects with file:line, corrections recorded
@@ -74,9 +74,7 @@ tag it, then resume.
 ## Inputs to collect (Phase 0)
 
 Use the arguments provided with the invocation (some platforms substitute
-them as `$ARGUMENTS`); otherwise infer from the repo. If a required
-input is genuinely ambiguous, ask **one question at a time** and always attach
-your recommended answer with a one-line reason.
+them as `$ARGUMENTS`); otherwise infer from the repo.
 
 | Field | Example |
 |-------|---------|
@@ -84,6 +82,15 @@ your recommended answer with a one-line reason.
 | Project root | `/Users/me/Sites/my-shop` |
 | Ground-truth source | `vendor/shopware/core`, `node_modules/next`, or official docs URL |
 | Plan output path | `docs/PLAN.md` |
+
+Then run the **framing interview** in
+[references/framing-interview.md](references/framing-interview.md): after a
+first recon pass, ask generously about scope, non-goals, done-criteria, risk
+appetite, data scale, rollout, and house rules. **Every question is a choice
+with 2–4 concrete options and a recommended pick** — the user answers fast or
+replies "use your recommendations." Skip only what recon already settled.
+Front-loading these does not lower the implementer's zero-question bar; it is
+how you reach it.
 
 ## Execution rules
 

@@ -46,7 +46,9 @@ Seven gated phases, each with exit criteria:
 
 1. **Frame** the task, scope, non-goals — and the **Research Questions** the
    design needs answered (research ends when the questions are answered, not
-   when every file has been read)
+   when every file has been read). Framing runs a generous interview where
+   every question is a multiple-choice with a recommended pick, so you answer
+   fast or just say "use your recommendations"
 2. **Inventory** the real codebase — every claim with a file path, everything
    classified works / half-wired / dead, plus operational reality (deploys,
    data scale, background jobs)
@@ -93,19 +95,23 @@ passing tests) — not optimism.
 
 ```
 deep-plan/
-└── skills/
-    ├── deep-plan/
-    │   ├── SKILL.md                      # Prime directive, gates, progress checklist
-    │   └── references/
-    │       ├── protocol.md               # The 7-phase protocol with exit criteria
-    │       ├── plan-template.md          # Exact structure of the output plan
-    │       └── review-checklist.md       # Acceptance checklist + rejection protocol
-    └── deep-plan-ingest/
-        ├── SKILL.md                      # Ingest workflow, staleness check, merge policy
-        └── references/
-            ├── agents-template.md        # AGENTS.md structure + merge rules
-            ├── architecture-template.md  # docs/ARCHITECTURE.md structure + merge rules
-            └── roadmap-template.md       # ROADMAP.md structure + status vocabulary
+├── skills/
+│   ├── deep-plan/
+│   │   ├── SKILL.md                      # Prime directive, gates, progress checklist
+│   │   └── references/
+│   │       ├── protocol.md               # The 7-phase protocol with exit criteria
+│   │       ├── framing-interview.md      # Phase 0 question bank (choices + recommendations)
+│   │       ├── plan-template.md          # Exact structure of the output plan
+│   │       └── review-checklist.md       # Acceptance checklist + rejection protocol
+│   └── deep-plan-ingest/
+│       ├── SKILL.md                      # Ingest workflow, staleness check, merge policy
+│       └── references/
+│           ├── agents-template.md        # AGENTS.md structure + merge rules
+│           ├── architecture-template.md  # docs/ARCHITECTURE.md structure + merge rules
+│           └── roadmap-template.md       # ROADMAP.md structure + status vocabulary
+└── evals/
+    ├── scenarios.md                      # 4 manual eval scenarios (query + expected behavior)
+    └── fixtures/                         # Planning-target repos with baked-in answer keys
 ```
 
 Follows the [Vercel skills](https://github.com/vercel-labs/skills) multi-skill

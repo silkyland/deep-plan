@@ -1,0 +1,7 @@
+{
+  "name": "half-wired-cart",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cart pricing with a planted half-wired setting and a correctness defect — deep-plan eval fixture",
+  "main": "src/index.js"
+}

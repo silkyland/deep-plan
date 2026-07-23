@@ -5,6 +5,19 @@ section is required, in this order. Replace the guidance text; keep the
 headings. Tag claims `VERIFIED` / `UNVERIFIED` / `CORRECTED` as defined in
 SKILL.md.
 
+## Contents (the 10 required plan sections)
+
+1. Context — intent, definition of done, Research Question list
+2. Findings: current state — inventory table (works/half-wired/dead)
+3. Findings: framework ground truth — vendor/versioned-doc facts
+4. Audit findings — defects, worst-first, each with file:line
+5. Corrections — beliefs proven wrong (mandatory content)
+6. Gap analysis — numbered, classified BROKEN/MISSING/FIGHTS-THE-FRAMEWORK
+7. Design decisions — one committed decision per gap, reversibility-tagged
+8. Phased roadmap — dependency-ordered, skeleton-first, spikes for unknowns
+9. Risk register — pre-mortem-generated, no generic entries
+10. Verification — copy-paste automated commands + manual E2E checklist
+
 ---
 
 ```markdown

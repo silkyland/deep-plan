@@ -26,11 +26,20 @@ Pin down what is actually being asked before touching anything:
    and what "done" means. If the user's wording and the repo disagree, note it.
 2. Confirm the four inputs (task, project root, ground-truth source, plan
    output path). Infer aggressively from the repo before asking.
-3. State explicit **non-goals** — what this plan will NOT cover. Scope creep
+3. Run the **framing interview** in
+   [framing-interview.md](framing-interview.md): after a first recon pass, ask
+   generously — scope boundary, definition of done, non-goals, reversibility
+   appetite, backward-compat, data scale, rollout, testing depth, and any
+   house rules. **Every question is a choice with 2–4 concrete options and a
+   recommended pick**, so the user can answer fast or reply "use your
+   recommendations" and get a complete framing. Skip only what recon already
+   settled. This front-loads ambiguity removal — it does not lower the
+   implementer's zero-question bar on the final plan.
+4. State explicit **non-goals** — what this plan will NOT cover. Scope creep
    begins where non-goals are missing.
-4. Identify the risk profile: what breaks, who is affected, and how reversible
+5. Identify the risk profile: what breaks, who is affected, and how reversible
    the change is. This calibrates how deep Phases 1–3 must go.
-5. Write the **Research Questions** — a numbered list of the questions the
+6. Write the **Research Questions** — a numbered list of the questions the
    design will need answered (extension points, contracts, invariants, data
    scale, operational constraints). Phases 1–3 exist to answer this list:
    every finding cites the question number it answers, questions discovered
@@ -39,8 +48,9 @@ Pin down what is actually being asked before touching anything:
    **not** when every file has been read.
 
 **Exit criteria:** task statement, inputs, non-goals, definition of done, and
-a numbered Research Question list are written down. Any open question was
-asked one-at-a-time with a recommended answer.
+a numbered Research Question list are written down. The framing interview was
+offered with every question as a recommended-option choice, and any answer
+taken as a default is tagged `assumed (framing default)`.
 
 ---
 
@@ -253,8 +263,14 @@ filled it.
 
 ## Interaction rules (apply to every phase)
 
-- Ask **ONE question at a time**, and ALWAYS attach your recommended answer
-  with a one-line reason. Never present a wall of questions.
+- **Framing (Phase 0):** ask generously — batch decision-ready questions,
+  each a choice of 2–4 concrete options with a recommended pick (see
+  [framing-interview.md](framing-interview.md)). The user can always reply
+  "use your recommendations."
+- **After framing (Phases 1–7):** ask sparingly and **ONE question at a
+  time** — by now research should answer most things; a mid-research question
+  still ALWAYS attaches a recommended answer with a one-line reason. Never
+  dump a wall of open-ended questions.
 - Report honestly: if something is unverified, tag it `UNVERIFIED`; if tests
   fail, say so plainly with output. Never round "probably fine" up to "fine".
 - Stop-and-verify triggers — if you catch yourself doing any of these, halt
