@@ -12,7 +12,7 @@ that share one non-negotiable law:
 
 | Skill | What it does |
 |-------|--------------|
-| [`deep-plan`](skills/deep-plan/SKILL.md) | Produces an audit-grade plan document through seven gated phases |
+| [`deep-plan`](skills/deep-plan/SKILL.md) | Produces an audit-grade plan through seven gated phases, then proves it with fresh no-context agents |
 | [`deep-plan-ingest`](skills/deep-plan-ingest/SKILL.md) | Distills the finished plan into `AGENTS.md`, `docs/ARCHITECTURE.md`, and `ROADMAP.md` |
 
 Every statement in a deep-plan output is tagged `VERIFIED` (with a `file:line`,
@@ -42,29 +42,38 @@ Or manually: copy `skills/<name>/` into your agent's skills folder
 /deep-plan Refactor cart pricing to use the rule engine — root: ., vendor: vendor/shopware, plan: docs/PLAN.md
 ```
 
+The planner is an **elephant** — a long-memory session that researches and
+decides but never implements, and keeps a state file so a new session can
+resume. Verification is by **goldfish** — fresh agents with no history, given
+only the plan and the repo (after [Rensin's elephant/goldfish
+model](https://research.google/pubs/elephants-goldfish-and-the-new-golden-age-of-software-engineering/)).
 Seven gated phases, each with exit criteria:
 
-1. **Frame** the task, scope, non-goals — and the **Research Questions** the
+0. **Frame** the task, scope, non-goals — and the **Research Questions** the
    design needs answered (research ends when the questions are answered, not
    when every file has been read). Framing runs a generous interview where
    every question is a multiple-choice with a recommended pick, so you answer
    fast or just say "use your recommendations"
-2. **Inventory** the real codebase — every claim with a file path, everything
+1. **Inventory** the real codebase — every claim with a file path, everything
    classified works / half-wired / dead, plus operational reality (deploys,
    data scale, background jobs)
-3. **Verify ground truth** against vendor source or versioned official docs —
+2. **Verify ground truth** against vendor source or versioned official docs —
    never memory
-4. **Adversarially audit** the existing code — defects with `file:line`,
+3. **Adversarially audit** the existing code — defects with `file:line`,
    wrong assumptions recorded as Corrections
-5. **Analyze gaps** — broken vs missing vs fights-the-framework
-6. **Commit to decisions** — one recommendation per gap, evidence-cited,
+4. **Analyze gaps** — broken vs missing vs fights-the-framework
+5. **Commit to decisions** — one recommendation per gap, evidence-cited,
    tagged REVERSIBLE or ONE-WAY, no menus — then a compact **Decision Brief**
    for user confirmation before the document is written
-7. **Write the plan** — dependency-ordered phased roadmap (walking skeleton
-   first for new functionality, a spike task for every surviving UNVERIFIED),
-   pre-mortem-generated risk register, copy-paste-runnable verification —
-   then self-grade against the acceptance checklist, and hand the plan to
-   a fresh no-context agent (the goldfish) to prove the zero-questions bar
+6. **Write the plan** — dependency-ordered milestones (M0 = shippable fixes,
+   M1 = walking skeleton for new functionality, a spike task for every
+   surviving UNVERIFIED), pre-mortem-generated risk register,
+   copy-paste-runnable verification, task IDs
+7. **Goldfish gates** — self-grade against the acceptance checklist, then
+   three fresh agents: **G1** explains each task without guessing, **G2**
+   attacks the plan as a hostile critic, **G3** says whether it could
+   implement on the first pass. Findings are triaged and logged in the
+   Corrections ledger; max 2 rounds per gate
 
 The bar: **a junior implementer agent can execute the plan without asking a
 single question.**
@@ -98,20 +107,24 @@ passing tests) — not optimism.
 deep-plan/
 ├── skills/
 │   ├── deep-plan/
-│   │   ├── SKILL.md                      # Prime directive, gates, progress checklist
+│   │   ├── SKILL.md                      # Prime directive, elephant/goldfish roles, tiers, checklist
 │   │   └── references/
-│   │       ├── protocol.md               # The 7-phase protocol with exit criteria
+│   │       ├── research-phases.md        # Phases 0–3: frame, inventory, ground truth, audit
+│   │       ├── design-phases.md          # Phases 4–6: gaps, decisions, write the plan
+│   │       ├── goldfish-gates.md         # Phase 7: G1 comprehension, G2 critic, G3 readiness
+│   │       ├── subagent-briefs.md        # Scout brief template, fan-out rules
+│   │       ├── state-file.md             # The elephant's durable memory + resume protocol
 │   │       ├── framing-interview.md      # Phase 0 question bank (choices + recommendations)
 │   │       ├── plan-template.md          # Exact structure of the output plan
 │   │       └── review-checklist.md       # Acceptance checklist + rejection protocol
 │   └── deep-plan-ingest/
-│       ├── SKILL.md                      # Ingest workflow, staleness check, merge policy
+│       ├── SKILL.md                      # Ingest workflow, staleness check, goldfish check
 │       └── references/
 │           ├── agents-template.md        # AGENTS.md structure + merge rules
 │           ├── architecture-template.md  # docs/ARCHITECTURE.md structure + merge rules
 │           └── roadmap-template.md       # ROADMAP.md structure + status vocabulary
 └── evals/
-    ├── scenarios.md                      # 4 manual eval scenarios (query + expected behavior)
+    ├── scenarios.md                      # 6 manual eval scenarios (query + expected behavior)
     └── fixtures/                         # Planning-target repos with baked-in answer keys
 ```
 

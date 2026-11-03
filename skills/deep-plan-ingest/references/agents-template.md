@@ -7,7 +7,8 @@ change how an agent behaves; anything merely informative belongs in
 
 Ingest from the plan: section 1 (context), section 3 (framework ground
 truth — only the facts agents repeatedly need), section 5 (corrections — as
-"common wrong assumptions"), section 10 (verification commands).
+"common wrong assumptions"; only plain `CORRECTED` entries, never the
+`(goldfish)` ones, which describe the plan, not the repo), section 10 (verification commands).
 
 ---
 

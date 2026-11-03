@@ -1,5 +1,12 @@
 # Framing Interview Guide (Phase 0)
 
+## Contents
+
+- Rules
+- This does NOT lower the implementer bar
+- Question bank
+- Output
+
 The recon tells you what the code IS; this interview pins down what the user
 wants the plan to DO before you spend tokens researching the wrong thing.
 Wrong scope caught here costs one round of questions; caught in Phase 6 it

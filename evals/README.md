@@ -24,3 +24,7 @@ that key.
 - `fixtures/ingest-sample/` — a finished `docs/PLAN.md` with VERIFIED,
   UNVERIFIED, and CORRECTED claims. Exercises `deep-plan-ingest`'s tag
   filtering, citation carry-over, and 150-line budget. (Scenario 4)
+- `fixtures/goldfish-gap/` — a draft plan whose milestone M0 cites a config
+  key that does not exist. Exercises the Phase 7 goldfish gates. (Scenario 5)
+- `fixtures/resume-state/` — a half-finished state file with a stale
+  citation. Exercises resume-and-reverify. (Scenario 6)
