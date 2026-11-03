@@ -61,6 +61,10 @@ by item, before presenting. If any item fails, return to the phase in
 Walk the roadmap as that implementer. Every "they'd have to figure out…" is a
 failing item. Do not present the plan until the answer is an honest yes.
 
+- [ ] A fresh goldfish agent, given only the plan and the repo, explained
+      roadmap Phase 0 and the first feature phase with zero guesses and
+      zero questions (or its remaining questions are listed in the plan).
+
 ## Rejection protocol
 
 If the user rejects the plan, reply briefly:

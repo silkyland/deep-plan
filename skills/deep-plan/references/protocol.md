@@ -246,18 +246,42 @@ template section with real content.
 
 ## Phase 7 — Self-review gate
 
-Grade the plan against [review-checklist.md](review-checklist.md), item by
-item, honestly. Then apply the final bar:
+Two passes, in this order.
 
-> **Could a junior implementer agent execute this plan without asking a
-> single question?**
+**7a. Checklist pass (you).** Grade the plan against
+[review-checklist.md](review-checklist.md), item by item, honestly.
+Fix what fails before 7b — do not spend a goldfish on known holes.
 
-Walk the roadmap as if you were that implementer: for each item, do you know
-which file to open, what to change, and how to verify it? Every "well, they
-would have to figure out…" is a hole — go back to the phase that should have
-filled it.
+**7b. Goldfish pass (fresh agent).** You cannot un-know Phases 0–6, so
+you cannot honestly play the junior implementer. Spawn a fresh subagent
+with NO conversation history. Give it ONLY:
 
-**Exit criteria:** every checklist item passes. Only then present the plan.
+- the plan document path
+- read access to the project root (it may open files the plan cites)
+
+Do NOT give it your notes, the Decision Brief, chat history, or a summary
+in your own words. Its ignorance is the test.
+
+Ask it to, for roadmap Phase 0 and the first feature phase:
+
+1. Explain each item in its own words: which file it opens, what it
+   changes, how it verifies the change.
+2. List every point where it had to guess, and every question it would
+   ask before starting.
+3. Spot-check 3 `VERIFIED` citations: does the cited `file:line` actually
+   say what the plan claims?
+
+Then compare against your intent:
+
+- Every guess or question = a hole. Fix it in the document, then record
+  it in the Corrections ledger as `CORRECTED (goldfish): <gap>`.
+- A failed citation spot-check = return to the phase that produced it.
+- Re-run with a NEW goldfish. Max 2 rounds; if holes remain, present
+  them honestly as open items rather than looping.
+
+**Exit criteria:** every checklist item passes, AND the last goldfish
+round produced zero guesses and zero questions for the phases it read
+(or remaining ones are listed openly in the presented plan).
 
 ---
 

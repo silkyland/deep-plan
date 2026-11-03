@@ -63,7 +63,8 @@ Seven gated phases, each with exit criteria:
 7. **Write the plan** — dependency-ordered phased roadmap (walking skeleton
    first for new functionality, a spike task for every surviving UNVERIFIED),
    pre-mortem-generated risk register, copy-paste-runnable verification —
-   then self-grade against the acceptance checklist
+   then self-grade against the acceptance checklist, and hand the plan to
+   a fresh no-context agent (the goldfish) to prove the zero-questions bar
 
 The bar: **a junior implementer agent can execute the plan without asking a
 single question.**
