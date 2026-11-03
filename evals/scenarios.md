@@ -62,3 +62,19 @@ key baked into code comments — grading is comparing the plan against that key.
   - The UNVERIFIED "prod cart size" claim never enters `AGENTS.md` or
     `ARCHITECTURE.md` — at most it appears in `ROADMAP.md` as an open question.
   - `AGENTS.md` is 150 lines or fewer.
+
+## Scenario 5 — goldfish pass catches a phantom config key (deep-plan)
+
+- **Fixture:** `fixtures/goldfish-gap/` (contains a draft `docs/PLAN.md`)
+- **Query:** `/deep-plan Enforce the discount cap — root: ., plan: docs/PLAN.md`
+  (run to Phase 7 against the existing draft plan)
+- **Expected behavior:**
+  - 7b spawns a fresh subagent given only the plan path and project root —
+    no notes, Decision Brief, or summary.
+  - The goldfish flags that roadmap Phase 0 reads `config.maxDiscountPct`,
+    which does not exist (`src/cart/config.js` exports
+    `discountCapPercent`), and that the `VERIFIED: src/cart/config.js:8`
+    citation does not say what the plan claims.
+  - The plan is fixed (key name and citation corrected) and a new goldfish
+    is run; the plan is not presented as passing on the first round.
+  - The Corrections ledger contains a `CORRECTED (goldfish): <gap>` entry.

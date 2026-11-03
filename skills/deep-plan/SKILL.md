@@ -63,7 +63,7 @@ Deep Plan Progress:
 - [ ] Phase 4: Gap analysis — numbered gaps: broken / missing / fights-the-framework
 - [ ] Phase 5: Decisions — one committed, reversibility-tagged decision per gap; Decision Brief confirmed
 - [ ] Phase 6: Plan document — phased roadmap (skeleton-first, spikes for unknowns), pre-mortem risks, verification
-- [ ] Phase 7: Self-review gate — checklist passed, zero-questions bar met
+- [ ] Phase 7: Self-review gate — checklist passed, goldfish pass (fresh agent, plan-only) found zero guesses
 ```
 
 **GATE:** Phases 0–3 are research. Phases 5–6 are design. Do not write one line
@@ -141,4 +141,5 @@ to do the research for real.` Then actually do it.
 | Not a git repo (git trajectory required by protocol) | Skip git-based research; note `UNVERIFIED: no git history` in Findings; rely on file timestamps and code archaeology |
 | User unavailable for Decision Brief Gate (headless) | Proceed on REVERSIBLE decisions; mark every ONE-WAY decision `UNCONFIRMED` in the plan document (protocol Phase 5) |
 | Exploration reveals the task is already done | Stop at Phase 4; present gap analysis showing zero gaps; recommend verification-only plan or closure |
+| No subagent support (cannot spawn a fresh agent) | Do 7a only; mark the plan `GOLDFISH: NOT RUN` and tell the user to open a fresh session with only the plan file and ask it to explain Phase 0 — that is the manual goldfish |
 | Phase 7 self-review fails after multiple attempts | Present the failing checklist item(s) with honest assessment; ask whether to lower the bar or abort |
