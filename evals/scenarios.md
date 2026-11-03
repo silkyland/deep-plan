@@ -1,9 +1,10 @@
 # Eval Scenarios
 
-Four scenarios, following Anthropic's skill-eval format (query + fixture +
+Six scenarios, following Anthropic's skill-eval format (query + fixture +
 expected_behavior). There is no automated pass/fail harness — run the skill
 against a fixture and check its output against the `expected_behavior` list
-by hand. Scenarios 1–3 test `deep-plan`; Scenario 4 tests `deep-plan-ingest`.
+by hand. Scenarios 1–3, 5, and 6 test `deep-plan`; Scenario 4 tests
+`deep-plan-ingest`.
 
 deep-plan writes only a plan document (it runs in Plan mode and edits no
 project files), so these fixtures are planning targets with a known answer
@@ -23,7 +24,7 @@ key baked into code comments — grading is comparing the plan against that key.
   - Phase 3 flags the unbounded discount as a correctness defect at
     `src/cart/PriceCalculator.js` (the `applyDiscount` line).
   - Phase 4 records the gap BROKEN (cap unenforced) + MISSING (no rule wired).
-  - Roadmap Phase 0 is the shippable correctness clamp; the rule-engine
+  - Milestone M0 is the shippable correctness clamp; the rule-engine
     wiring comes after.
 
 ## Scenario 2 — framework API with no vendor source → UNVERIFIED, not memory
@@ -62,19 +63,40 @@ key baked into code comments — grading is comparing the plan against that key.
   - The UNVERIFIED "prod cart size" claim never enters `AGENTS.md` or
     `ARCHITECTURE.md` — at most it appears in `ROADMAP.md` as an open question.
   - `AGENTS.md` is 150 lines or fewer.
+  - The `CORRECTED (goldfish)` entry (a plan gap) is **not** ingested as a
+    common wrong assumption.
+  - A fresh goldfish is given only `AGENTS.md` and the repo and is asked how
+    to build/test and what the wrong assumptions are; guesses it reports
+    are fixed in the file.
 
-## Scenario 5 — goldfish pass catches a phantom config key (deep-plan)
+## Scenario 5 — goldfish gates catch a phantom config key (deep-plan)
 
 - **Fixture:** `fixtures/goldfish-gap/` (contains a draft `docs/PLAN.md`)
 - **Query:** `/deep-plan Enforce the discount cap — root: ., plan: docs/PLAN.md`
   (run to Phase 7 against the existing draft plan)
 - **Expected behavior:**
-  - 7b spawns a fresh subagent given only the plan path and project root —
-    no notes, Decision Brief, or summary.
-  - The goldfish flags that roadmap Phase 0 reads `config.maxDiscountPct`,
+  - G1 spawns a fresh subagent given only the plan path and project root —
+    no notes, state file, Decision Brief, or summary.
+  - The goldfish flags that milestone M0 reads `config.maxDiscountPct`,
     which does not exist (`src/cart/config.js` exports
     `discountCapPercent`), and that the `VERIFIED: src/cart/config.js:8`
     citation does not say what the plan claims.
-  - The plan is fixed (key name and citation corrected) and a new goldfish
+  - The plan is fixed (key name and citation corrected) and a NEW goldfish
     is run; the plan is not presented as passing on the first round.
+  - G2 (critic) and G3 (readiness) run only after G1 passes, each with its
+    own fresh agent; the header ends as `Goldfish: PASSED (…)`.
   - The Corrections ledger contains a `CORRECTED (goldfish): <gap>` entry.
+
+## Scenario 6 — resume from a state file (deep-plan)
+
+- **Fixture:** `fixtures/resume-state/` (contains `docs/.deep-plan/state.md`
+  recording Phase 2 as complete)
+- **Query:** `/deep-plan Enforce the discount cap — root: ., plan: docs/PLAN.md`
+- **Expected behavior:**
+  - The run finds the state file and reads it before doing anything else;
+    it does not restart at Phase 0 or redo answered Research Questions.
+  - It re-opens 2–3 cited files before trusting them, and notices that
+    `src/cart/config.js:2` no longer holds `discountCapPercent` (it is at
+    line 5).
+  - The stale citation is recorded as a correction and fixed in the state
+    file, then work continues at Phase 3.

@@ -1,7 +1,7 @@
 # ROADMAP.md Template
 
 The living answer to "where are we and what's next?". Ingested from plan
-section 8 (phased roadmap) and section 9 (risk register), then kept current:
+section 8 (milestones M0…) and section 9 (risk register), then kept current:
 re-running deep-plan-ingest updates statuses instead of rewriting the file.
 
 Status vocabulary (use exactly these): `done` / `in-progress` / `blocked` /
@@ -17,15 +17,15 @@ Status vocabulary (use exactly these): `done` / `in-progress` / `blocked` /
 
 ## Status
 
-| Phase | Name | Status | Effort | Depends on |
+| Milestone | Name | Status | Effort | Depends on |
 |-------|------|--------|--------|------------|
-| 0 | <security/correctness fixes> | done | S | — |
-| 1 | <...> | in-progress | M | 0 |
-| 2 | <...> | todo | L | 1 |
+| M0 | <security/correctness fixes> | done | S | — |
+| M1 | <...> | in-progress | M | M0 |
+| M2 | <...> | todo | L | M1 |
 
-## Phase details
+## Milestone details
 
-### Phase <N>: <name> — <status>
+### M<N>: <name> — <status>
 - **Objective:** <one line>
 - **Exit criteria:** <verifiable statement — a command passes, a behavior is observable>
 - **Tasks:**
@@ -33,11 +33,11 @@ Status vocabulary (use exactly these): `done` / `in-progress` / `blocked` /
   - [ ] <open task naming the concrete files it touches>
 - **Notes:** <deviations from the original plan, and why — dated>
 
-<Repeat per phase.>
+<Repeat per milestone.>
 
 ## Open questions
 
-<UNVERIFIED items from the plan land here and ONLY here — each with what
+<UNVERIFIED and `OPEN (goldfish)` items from the plan land here and ONLY here — each with what
 would resolve it. Nothing unverified is allowed into AGENTS.md or
 ARCHITECTURE.md.>
 
@@ -46,7 +46,7 @@ ARCHITECTURE.md.>
 ## Risks
 
 <From plan section 9 — only risks still live; move materialized or retired
-risks to Notes of the phase that handled them.>
+risks to Notes of the milestone that handled them.>
 
 | Risk | Likelihood | Impact | Mitigation / rollback |
 |------|-----------|--------|----------------------|
@@ -59,7 +59,7 @@ risks to Notes of the phase that handled them.>
 - On re-ingest, **update statuses and check off tasks based on evidence**
   (git log, file existence, tests passing) — not on optimism. A task is
   `done` only if you can cite the commit or the passing command.
-- Never delete completed tasks or phases — they are the project's changelog.
+- Never delete completed tasks or milestones — they are the project's changelog.
 - If implementation diverged from the plan, record the deviation in the
-  phase's Notes with a date; if the divergence is large, recommend a fresh
+  milestone's Notes with a date; if the divergence is large, recommend a fresh
   deep-plan run instead of bending the roadmap to fit.

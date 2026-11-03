@@ -1,132 +1,138 @@
 ---
 name: deep-plan
 description: >-
-  Research-first, evidence-first implementation planning in seven gated phases:
-  frame the task, inventory the real codebase, verify ground truth from vendor
-  source or official docs, adversarially audit existing code, analyze gaps,
-  commit to design decisions, and write a phased plan document with timeline,
-  risks, and verification. Enforces "no claim without evidence, no design
-  before research". Use when the user asks to plan, design, architect, audit,
-  or review before implementing a feature, refactor, migration, or system, or
-  mentions deep-plan, /deep-plan, or Plan mode.
+  Plans a feature, refactor, migration, or system before any code is written,
+  using evidence-first research and a long-memory "elephant" planner checked
+  by fresh no-context "goldfish" agents. Seven gated phases: frame the task,
+  inventory the real codebase, verify ground truth from vendor source or
+  official docs, audit existing code adversarially, analyze gaps, commit to
+  design decisions, and write a phased plan that three goldfish gates prove
+  executable without questions. Use when the user asks to plan, design,
+  architect, audit, or review before implementing, or mentions deep-plan,
+  /deep-plan, elephant/goldfish, or Plan mode.
 license: MIT
 argument-hint: "[task] [project-root] [ground-truth-source] [plan-output-path]"
 ---
 
 # Deep Plan
 
-Audit-grade planning: **evidence first, design later, never guess.**
-
-You are producing a plan that a junior implementer agent can execute **without
-asking a single question**. That is the bar. Everything below exists to reach it.
+Audit-grade planning: **evidence first, design later, never guess.** The
+bar is a plan a junior implementer agent can execute **without asking a
+single question** — and a fresh agent proves it, not you.
 
 ## The Prime Directive
 
 > **No claim without evidence. No design before research.**
 
-Every statement in your plan is one of:
+Every statement in the plan is exactly one of:
 
 | Tag | Meaning | Required proof |
 |-----|---------|----------------|
 | `VERIFIED` | You read it yourself, this session | `file:line`, vendor path, or URL + version |
 | `UNVERIFIED` | You could not confirm it | Explicit label + what would confirm it |
-| `CORRECTED` | You previously believed it and were wrong | The old belief AND the new evidence |
+| `CORRECTED` | You believed it and were wrong | The old belief AND the new evidence |
 
-If you cannot cite it, you cannot claim it. Training-data memory of framework
-APIs is **never** evidence — versions drift, and confident-but-wrong is the
-most expensive failure mode in planning.
+Training-data memory of framework APIs is a hypothesis, never evidence.
+
+## Two kinds of agent: elephant and goldfish
+
+Based on Rensin's elephant/goldfish model. The planner that knows everything
+is the worst judge of whether the plan stands on its own.
+
+| Role | Who | Memory | Job |
+|------|-----|--------|-----|
+| **Elephant** | You, the planning session | Long — Phases 0–6 | Research, decide, write the plan. Never implements. |
+| **Scout** | Exploration subagent with a written brief | Brief only | Answers named Research Questions in Phases 1–3. |
+| **Goldfish** | Fresh subagent, zero history | Plan path + repo only | Tests the plan in Phase 7. Its ignorance is the test. |
+
+Two rules follow:
+
+1. **Make the elephant's memory durable.** Keep a state file so a new
+   session can resume ([references/state-file.md](references/state-file.md)).
+2. **Never brief a goldfish.** It gets the plan path and read access to the
+   project root — no notes, no Decision Brief, no summary in your words.
 
 ## Before you start
 
-1. Read [references/protocol.md](references/protocol.md) in full — the phase
-   protocol is mandatory and executed in order.
-2. Switch to **Plan mode** if the tool supports it. Do not edit project files;
-   the only file you write is the plan document.
-3. Expect high token/time cost. That is the price of a plan an implementer can
-   execute without guessing.
+1. Read [references/research-phases.md](references/research-phases.md) now;
+   read each later reference when you reach its phase (table below).
+2. Use **Plan mode** if the tool supports it. Write only the plan document
+   and the state file. If edits are blocked, present the plan in chat and
+   write the files after approval.
+3. Pick an **effort tier** in Phase 0 and record it in the state file:
 
-**Preflight:** if the project root is not a git repository, git-based research
-(trajectory, recent changes) cannot run — note `UNVERIFIED: no git history` in
-your Findings and rely on file timestamps and code archaeology instead.
+   | Tier | Signal | Scouts | Goldfish gates |
+   |------|--------|--------|----------------|
+   | Light | one subsystem, few files, all REVERSIBLE | 0–1 | one combined pass (G1+G3) |
+   | Standard | multi-file, one boundary crossed | 2–3 | G1, G2, G3 — one goldfish each |
+   | Heavy | cross-cutting, ONE-WAY decisions, prod data | 3–5 per wave | G2 with 2–3 critics, distinct lenses |
+
+   A single-file fix does not need deep-plan — say so and stop.
+4. **Preflight:** no git repo means no trajectory research. Note
+   `UNVERIFIED: no git history` and use timestamps and code archaeology.
 
 ## Progress checklist
 
-Copy this into your response and check items off as you complete each phase.
-**A phase is complete only when its exit criteria in the protocol pass.**
+Copy into your response and check off as you go. **A phase is complete only
+when its exit criteria pass.**
 
 ```
 Deep Plan Progress:
-- [ ] Phase 0: Frame — task, scope, definition of done, inputs, research questions (framing interview: generous, every question a recommended-option choice)
-- [ ] Phase 1: Inventory — codebase mapped with file paths, classified works/half-wired/dead
-- [ ] Phase 2: Ground truth — every framework claim backed by vendor path or versioned doc URL
-- [ ] Phase 3: Adversarial audit — defects with file:line, corrections recorded
-- [ ] Phase 4: Gap analysis — numbered gaps: broken / missing / fights-the-framework
-- [ ] Phase 5: Decisions — one committed, reversibility-tagged decision per gap; Decision Brief confirmed
-- [ ] Phase 6: Plan document — phased roadmap (skeleton-first, spikes for unknowns), pre-mortem risks, verification
-- [ ] Phase 7: Self-review gate — checklist passed, goldfish pass (fresh agent, plan-only) found zero guesses
+- [ ] Phase 0: Frame — task, scope, done, inputs, tier, Research Questions, state file created
+- [ ] Phase 1: Inventory — file paths, works/half-wired/dead (scouts briefed)
+- [ ] Phase 2: Ground truth — vendor path or versioned doc URL per framework claim
+- [ ] Phase 3: Audit — defects with file:line, Corrections recorded
+- [ ] Phase 4: Gaps — numbered: BROKEN / MISSING / FIGHTS-THE-FRAMEWORK
+- [ ] Phase 5: Decisions — one per gap, reversibility-tagged; Decision Brief confirmed
+- [ ] Phase 6: Plan document — milestones, spikes, pre-mortem risks, verification
+- [ ] Phase 7: Goldfish gates — 7a checklist, G1 comprehension, G2 critic, G3 readiness
 ```
 
-**GATE:** Phases 0–3 are research. Phases 5–6 are design. Do not write one line
-of design until Phases 1–3 are checked. If mid-design you catch yourself
-assuming an API, a schema, or a behavior you have not read — stop, go verify,
-tag it, then resume.
+**GATE:** Phases 0–3 are research, 5–6 are design. Design written before
+Phases 1–3 pass must be deleted and redone.
 
-## Inputs to collect (Phase 0)
+## Phases
 
-Use the arguments provided with the invocation (some platforms substitute
-them as `$ARGUMENTS`); otherwise infer from the repo.
+| Phase | Read before starting |
+|-------|----------------------|
+| 0 Frame, 1 Inventory, 2 Ground truth, 3 Audit | [research-phases.md](references/research-phases.md); Phase 0 also [framing-interview.md](references/framing-interview.md) |
+| 1 (fan-out) | [subagent-briefs.md](references/subagent-briefs.md) |
+| 4 Gaps, 5 Decisions, 6 Write | [design-phases.md](references/design-phases.md), [plan-template.md](references/plan-template.md) |
+| 7 Goldfish gates | [goldfish-gates.md](references/goldfish-gates.md), [review-checklist.md](references/review-checklist.md) |
+| Every phase exit | [state-file.md](references/state-file.md) |
+
+## Inputs (Phase 0)
+
+Use the invocation arguments (some platforms substitute `$ARGUMENTS`);
+otherwise infer from the repo.
 
 | Field | Example |
 |-------|---------|
 | Task (2–5 lines: what, why, done-when) | Refactor cart pricing to use the framework's rule engine |
 | Project root | `/Users/me/Sites/my-shop` |
-| Ground-truth source | `vendor/shopware/core`, `node_modules/next`, or official docs URL |
+| Ground-truth source | `vendor/shopware/core`, `node_modules/next`, or a docs URL |
 | Plan output path | `docs/PLAN.md` |
-
-Then run the **framing interview** in
-[references/framing-interview.md](references/framing-interview.md): after a
-first recon pass, ask generously about scope, non-goals, done-criteria, risk
-appetite, data scale, rollout, and house rules. **Every question is a choice
-with 2–4 concrete options and a recommended pick** — the user answers fast or
-replies "use your recommendations." Skip only what recon already settled.
-Front-loading these does not lower the implementer's zero-question bar; it is
-how you reach it.
 
 ## Execution rules
 
-- Follow Phases 0–7 in [references/protocol.md](references/protocol.md) **in order**.
-- Phases 1–3 answer the Phase 0 **Research Questions** — research ends when
-  every question is answered or tagged UNVERIFIED, not when every file has
-  been read.
-- Before writing the plan document, pass the **Decision Brief Gate**
-  (protocol, end of Phase 5): a 10–20 line brief in chat, one confirmation.
-- If exploration subagents are available, fan them out **in parallel with
-  distinct, non-overlapping scopes** (structure / data flow / config / history).
-- Every bug or finding needs `file:line`. Every framework claim needs a vendor
-  path or a versioned doc URL.
-- Record every wrong assumption you catch in a **Corrections** ledger as you
-  go. A plan that never found itself wrong did not look hard enough.
-- The final plan contains **decisions, not menus**. Weigh alternatives during
-  Phase 5, then commit.
-
-## Output
-
-- Write the plan document following
-  [references/plan-template.md](references/plan-template.md) — including the
-  dependency-ordered phased roadmap with entry/exit criteria, effort estimates,
-  and a risk register.
-- Before presenting, self-grade against
-  [references/review-checklist.md](references/review-checklist.md). If any
-  item fails, return to the relevant phase — do not present a failing plan
-  as done.
+- Phases run **in order**. Research ends when every Research Question is
+  answered or tagged `UNVERIFIED`, not when every file has been read.
+- Scouts get a written brief; never fan out with "go look at X".
+- Update the state file at every phase exit; it is your memory, the chat is
+  not.
+- Every finding needs `file:line`; every framework claim a vendor path or
+  versioned URL.
+- Record every wrong assumption in the Corrections ledger. An empty ledger
+  means you did not look hard enough.
+- The plan contains **decisions, not menus**.
 
 ## After acceptance
 
-Once the plan is accepted (and again after implementation makes progress),
-suggest running the companion skill **deep-plan-ingest** to distill the
-plan's verified knowledge into durable project files: `AGENTS.md`,
-`docs/ARCHITECTURE.md`, and `ROADMAP.md`. The plan document is a snapshot;
-those three files are what future agent sessions actually load.
+1. **Implement from a fresh session** given only the plan file and the
+   instruction to follow it exactly. If reality forces a deviation, update
+   the plan first, then the code.
+2. Run **deep-plan-ingest** to distill the verified knowledge into
+   `AGENTS.md`, `docs/ARCHITECTURE.md`, and `ROADMAP.md`.
 
 ## If the plan is rejected
 
@@ -137,9 +143,10 @@ to do the research for real.` Then actually do it.
 
 | Situation | Response |
 |-----------|----------|
-| Ground-truth source unavailable (no vendor dir, docs 404) | Tag every framework claim `UNVERIFIED` with the version/path you tried; convert to spike tasks in roadmap Phase 0 |
-| Not a git repo (git trajectory required by protocol) | Skip git-based research; note `UNVERIFIED: no git history` in Findings; rely on file timestamps and code archaeology |
-| User unavailable for Decision Brief Gate (headless) | Proceed on REVERSIBLE decisions; mark every ONE-WAY decision `UNCONFIRMED` in the plan document (protocol Phase 5) |
-| Exploration reveals the task is already done | Stop at Phase 4; present gap analysis showing zero gaps; recommend verification-only plan or closure |
-| No subagent support (cannot spawn a fresh agent) | Do 7a only; mark the plan `GOLDFISH: NOT RUN` and tell the user to open a fresh session with only the plan file and ask it to explain Phase 0 — that is the manual goldfish |
-| Phase 7 self-review fails after multiple attempts | Present the failing checklist item(s) with honest assessment; ask whether to lower the bar or abort |
+| Ground-truth source unavailable | Tag every framework claim `UNVERIFIED` with the version/path tried; convert to spike tasks in milestone M0 |
+| Not a git repo | Skip git research; note `UNVERIFIED: no git history` |
+| User unavailable for the Decision Brief (headless) | Proceed on REVERSIBLE decisions; mark every ONE-WAY decision `UNCONFIRMED` |
+| Task is already done | Stop at Phase 4; present zero gaps; recommend verification-only or closure |
+| No subagent support | Do 7a only; mark the plan `GOLDFISH: NOT RUN`; tell the user to open a fresh session with only the plan file and ask it to explain milestone M0 — that is the manual goldfish |
+| Context is heavy or the session died | Start a new elephant from the state file ([state-file.md](references/state-file.md)) |
+| Goldfish gates still fail after 2 rounds | Present the open items honestly; ask whether to lower the bar or abort |

@@ -9,7 +9,7 @@ description: >-
   and merges into existing files instead of overwriting. Use after a
   deep-plan finishes, when the user mentions deep-plan-ingest or ingest the
   plan, or asks to generate/update AGENTS.md, ARCHITECTURE.md, or ROADMAP.md
-  from a plan.
+  from a plan. A fresh goldfish agent then tests that AGENTS.md stands alone.
 license: MIT
 argument-hint: "[plan-path] [project-root]"
 ---
@@ -38,6 +38,13 @@ files future agents actually load — so the research paid for once keeps paying
 - A citation is copied along with its claim. A fact that loses its
   `file:line` / vendor path / doc URL on the way over was not ingested, it
   was laundered.
+- `CORRECTED (goldfish)` and `REJECTED (goldfish)` entries are gaps in the
+  plan itself, not wrong beliefs about the repo. They never enter "Common
+  wrong assumptions". `OPEN (goldfish)` items go to `ROADMAP.md` open
+  questions.
+- The plan header says how far to trust it: `Goldfish: PASSED` uses the
+  normal staleness check; `NOT RUN` or `OPEN ITEMS` means re-verify **every**
+  cited claim before ingesting, not only those whose files changed.
 
 ## Progress checklist
 
@@ -50,7 +57,8 @@ Ingest Progress:
 - [ ] Step 3: Ingest AGENTS.md (merge, don't clobber)
 - [ ] Step 4: Ingest docs/ARCHITECTURE.md (merge, don't clobber)
 - [ ] Step 5: Ingest ROADMAP.md with phase status
-- [ ] Step 6: Report — written / updated / skipped / dropped-as-stale
+- [ ] Step 6: Goldfish check — a fresh agent uses AGENTS.md alone
+- [ ] Step 7: Report — written / updated / skipped / dropped-as-stale
 ```
 
 ## Step 1 — Locate the plan and confirm targets
@@ -112,7 +120,18 @@ calls; all must pass:
 3. Every claim carried over kept its citation — grep the outputs for
    bare assertions that lost their `file:line` on the way.
 
-## Step 6 — Report
+## Step 6 — Goldfish check
+
+The elephant (you) cannot judge whether `AGENTS.md` stands alone. Spawn a
+fresh subagent with NO history and give it ONLY the path of the AGENTS-type
+file and read access to the repo. Ask it to: (1) state how to build, test,
+and lint; (2) name two wrong assumptions an agent would make here; (3) say
+where to find architecture and the next milestone; (4) list every point
+where it had to guess. Verify its answers against the repo. Each guess is a
+hole: fix the file, then re-run with a NEW goldfish — max 2 rounds. No
+subagent support: say so in the report and skip.
+
+## Step 7 — Report
 
 End with a concise report:
 
@@ -120,5 +139,6 @@ End with a concise report:
 - **Dropped as stale:** each plan claim that failed re-verification, with the
   commit or file that invalidated it.
 - **Skipped:** `UNVERIFIED` items excluded (count is enough).
+- **Goldfish:** result of Step 6, and any guesses left open.
 - **Suggested follow-up:** if many claims were stale, recommend re-running
   deep-plan for the affected area instead of patching the docs by hand.
