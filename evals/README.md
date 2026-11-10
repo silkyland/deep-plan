@@ -26,12 +26,14 @@ has failed regardless of the plan's content.
 
 | Fixture | Exercises | Scenario |
 |---------|-----------|----------|
-| `cart-pricing/` | Inventory classification, vendor-sourced ground truth, audit, gaps, milestone order | 1 |
+| `cart-pricing/` | Inventory, vendor contract, milestone order; interactive framing | 1, 10 |
 | `express-api/` | Framework dependency with no installed source: cite fetched docs or tag `UNVERIFIED` and spike | 2 |
 | `http-service/` | The requested feature exists and is tested: stop with zero gaps | 3 |
 | `cart-ingest/` | Ingest filtering and citation carry-over; accepted-plan revision | 4, 7 |
 | `cart-draft-plan/` | A draft plan that cites a config key and a file that do not exist: the goldfish gates | 5 |
 | `cart-resume/` | A state file whose citation has gone stale: resume and re-verify | 6 |
+| `cart-service/` | Complete-source revision; re-ingest with working-tree changes and human documents | 8, 9 |
+| `json-export/` | Python security fix planning using an existing helper | 11 |
 
 ## Validation record — 2026-11-10
 
@@ -56,3 +58,30 @@ Both skills pass the Codex quick validator in temporary copies with the
 Claude-specific `argument-hint` field omitted. The real field is preserved
 for cross-agent compatibility. No baseline comparison or trigger-accuracy
 benchmark was run.
+
+
+## Follow-up validation — 2026-11-10
+
+All runs started from the committed `558c559` skill instructions, frozen
+outside this repository. These are Codex agent runs, not a Claude model
+benchmark. No behavioral skill edit was justified by the completed tests.
+
+| Scenario | Observed result |
+|----------|-----------------|
+| 5, repeated | Strictly sequential fresh G1 r1 → G1 r2 → G2 r1 → G3 r1. First reader saw the original phantom key before fixes. M0 became implementable; undefined M1 stayed OPEN and G3 said NO-GO. No source changes. |
+| 8 | Complete-source revision passed scoped G1+G3 r1. Existing RangeError contract reused; old RQ1/RQ2 answers retained verbatim; database work marked dropped. Revision entries remained append-only; source unchanged. |
+| 9, second ingest | Current cap20, integrated untracked rule and three-test evidence replaced stale knowledge. Human sections and human ground rule preserved. Original ADR retained verbatim with a superseding implementation observation; unconfirmed persistence stayed open. |
+| 9, unchanged repeat | All three documents byte-identical to the preceding outputs; no new ADR or status changes. Fresh reader passed without guesses. AGENTS.md 36 lines. |
+| 10 | Real owner answered three framing choices and confirmed one Decision Brief; no repeated framing. Final plan passed fresh G1+G3 r1, GO; choices recorded as user-confirmed with no framing defaults. This exercises the interaction protocol; it is not a scored satisfaction study. |
+| 11 | Python JSON exporter: existing helper reused, leak identified despite passing baseline, first milestone includes security regressions. Fresh G1+G3 r1 passed, GO; source unchanged. |
+
+Fixtures are synthetic inputs. Their historical plan headers are scenario
+data, not evidence of previous implementation or gate execution. The source
+patch in `changes/` makes Scenario 9's staged implementation repeatable.
+The second ingest recorded supplemental exact planned assertions in addition
+to the three-test suite, rather than presenting those as permanent tests.
+
+This coverage tests a planning procedure across JavaScript and Python and
+several workflow states. It does not validate production CMSs, games,
+trading systems, driver ports, or every target OS/hardware combination.
+Those uses need their own source, contracts, environments and validation.

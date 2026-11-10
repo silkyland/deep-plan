@@ -15,6 +15,12 @@ that share one non-negotiable law:
 | [`deep-plan`](skills/deep-plan/SKILL.md) | Produces an audit-grade plan through eight gated phases, then tests it with fresh no-context agents |
 | [`deep-plan-ingest`](skills/deep-plan-ingest/SKILL.md) | Distills the finished plan into `AGENTS.md`, `docs/ARCHITECTURE.md`, and `ROADMAP.md` |
 
+The workflow applies to planning across domains: new systems, reverse
+engineering, cross-platform work, and legacy modernization all use the same
+evidence and review gates. Each still needs its own target-specific source,
+contracts and validation environment. The [evals](evals/README.md) distinguish
+what has actually been exercised from broader intended uses.
+
 Every statement in a deep-plan output is tagged `VERIFIED` (with a `file:line`,
 vendor path, or versioned doc URL), `UNVERIFIED` (explicitly), or `CORRECTED`
 (a wrong belief, fixed with proof). Framework knowledge from training-data

@@ -1,0 +1,87 @@
+diff --git a/src/cart/DiscountCapRule.js b/src/cart/DiscountCapRule.js
+new file mode 100644
+--- /dev/null
++++ b/src/cart/DiscountCapRule.js
+@@ -0,0 +1,13 @@
++const { RuleInterface } = require('../../vendor/rule-engine/RuleInterface');
++
++class DiscountCapRule extends RuleInterface {
++  match(scope) {
++    return Number.isFinite(scope.discountPercent) && scope.discountPercent > scope.discountCapPercent;
++  }
++
++  apply(scope) {
++    scope.discountPercent = scope.discountCapPercent;
++  }
++}
++
++module.exports = { DiscountCapRule };
+diff --git a/src/cart/PriceCalculator.js b/src/cart/PriceCalculator.js
+--- a/src/cart/PriceCalculator.js
++++ b/src/cart/PriceCalculator.js
+@@ -1,16 +1,17 @@
+ const config = require('./config');
++const { validateCap } = require('./validateCap');
++const { DiscountCapRule } = require('./DiscountCapRule');
++const capRule = new DiscountCapRule();
+
+-// Applies a percentage discount to a line total.
+ function applyDiscount(lineTotal, discountPercent) {
+-  const factor = (100 - discountPercent) / 100;
++  const scope = { discountPercent, discountCapPercent: validateCap(config.discountCapPercent) };
++  if (capRule.match(scope)) capRule.apply(scope);
++  const factor = (100 - scope.discountPercent) / 100;
+   return Math.round(lineTotal * factor * 100) / 100;
+ }
+
+ function cartTotal(lines) {
+-  return lines.reduce(
+-    (sum, l) => sum + applyDiscount(l.total, l.discountPercent || 0),
+-    0,
+-  );
++  return lines.reduce((sum, line) => sum + applyDiscount(line.total, line.discountPercent || 0), 0);
+ }
+
+ module.exports = { applyDiscount, cartTotal, currency: config.currency };
+diff --git a/src/cart/config.js b/src/cart/config.js
+--- a/src/cart/config.js
++++ b/src/cart/config.js
+@@ -1,5 +1,5 @@
+ // Cart configuration.
+ module.exports = {
+   currency: 'EUR',
+-  discountCapPercent: 50,
++  discountCapPercent: 20,
+ };
+diff --git a/test/pricing.test.js b/test/pricing.test.js
+--- a/test/pricing.test.js
++++ b/test/pricing.test.js
+@@ -9,3 +9,28 @@
+ test('invalid cap uses the existing error contract', () => {
+   assert.throws(() => validateCap(-1), { name: 'RangeError', message: 'Invalid discount cap' });
+ });
++
++test('configured cap applies to both pricing paths and fresh config', () => {
++  const config = require('../src/cart/config');
++  const { cartTotal } = require('../src/cart/PriceCalculator');
++  const { DiscountCapRule } = require('../src/cart/DiscountCapRule');
++  const original = config.discountCapPercent;
++  try {
++    for (const cap of [20, 30, 50]) {
++      config.discountCapPercent = cap;
++      assert.equal(applyDiscount(100, 90), 100 - cap);
++      assert.equal(cartTotal([{ total: 100, discountPercent: 90 }]), 100 - cap);
++      assert.equal(applyDiscount(100, 10), 90);
++    }
++    assert.equal(cartTotal([]), 0);
++    const rule = new DiscountCapRule();
++    const scope = { discountPercent: 90, discountCapPercent: 50 };
++    assert.equal(rule.match(scope), true);
++    assert.equal(rule.apply(scope), undefined);
++    assert.equal(scope.discountPercent, 50);
++    for (const bad of [-1, NaN, Infinity]) {
++      config.discountCapPercent = bad;
++      assert.throws(() => applyDiscount(100, 90), { name: 'RangeError', message: 'Invalid discount cap' });
++    }
++  } finally { config.discountCapPercent = original; }
++});

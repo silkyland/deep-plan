@@ -1,8 +1,8 @@
 # Eval scenarios
 
-Seven scenarios: a query, a fixture, and the behavior to check for.
-Scenarios 1–3 and 5–7 test `deep-plan`; Scenario 4 tests
-`deep-plan-ingest`. See [README.md](README.md) for how to run them.
+Eleven scenarios: a query, a fixture, and the behavior to check for.
+Scenarios 4 and 9 test `deep-plan-ingest`; the others test `deep-plan`.
+See [README.md](README.md) for how to run them.
 
 Each fixture's answer key is in this file only.
 
@@ -130,14 +130,112 @@ Each fixture's answer key is in this file only.
 - **Expected behavior:**
   - The run revises the existing plan and does not restart at Phase 0 or
     redo the framing interview.
-  - It re-opens the citations the change touches (and no more than needed)
-    and confirms they still hold.
-  - Section 11 gains an `R1` entry with a date, trigger, evidence, change,
-    and decision. Decision 2 is marked dropped (`dropped (R1)`), not
-    deleted, and the open question is closed with a pointer to `R1`.
+  - It tries to re-open affected citations. This fixture contains only the
+    plan: missing sources must be reported and affected claims marked
+    UNVERIFIED, with recovery spikes. Historical PASSED is not a fresh pass.
+    Scenario 8 separately checks revision with complete source.
+  - Section 11 gains revision entries starting at `R1`, with dates,
+    triggers, evidence, changes and decisions. Decision 2 is marked
+    `dropped (R<N>)`, not deleted, and the open question points to the
+    revision that resolved it.
   - Sections 1–10 are updated to match: the new decision appears in
     section 7 with its tag, and any milestone task that depends on it is
     adjusted.
   - Goldfish run only on what changed (G1 on the affected tasks), and the
     header line records the revision.
   - It does not re-research Research Questions the change leaves alone.
+
+
+## Scenario 8: revise with complete source
+
+- **Fixture:** `fixtures/cart-service/`
+- **Query:** `/deep-plan Revise docs/PLAN.md: the owner decides configured caps above 100 must be rejected through the existing cap-validation error contract, and Decision 2/database persistence is dropped. Preserve all other approved scope. root: . plan: docs/PLAN.md`
+- **Expected behavior:**
+  - Reuse the accepted plan. Revisit the affected invalid-cap policy and
+    persistence scope without restarting the framing interview.
+  - Re-open `src/cart/validateCap.js`: use its existing
+    `RangeError('Invalid discount cap')`, not an invented error contract.
+  - Update affected decisions, task descriptions and planned test cases;
+    retain unchanged RQ answers. Mark obsolete decision/milestone/task IDs dropped, not deleted.
+  - Append revision entries with owner request and source evidence. Earlier
+    entries stay intact; do not invent implementation progress.
+  - Fresh gates use the revision task scope. Source/vendor/tests remain
+    unchanged; baseline `npm test` still passes two tests.
+
+## Scenario 9: re-ingest after implementation, then repeat unchanged
+
+- **Fixture:** `fixtures/cart-service/`
+- **Query:** `/deep-plan-ingest docs/PLAN.md`
+- **Setup and sequence:**
+  1. Copy the fixture outside this repo. Initialize git, add all fixture
+     files and create a local baseline commit. Run the query once.
+  2. After the first ingest, add a human-maintained ground rule to AGENTS.md:
+     `Human-maintained: release notes require reviewer initials.` Add this
+     human section to all three outputs:
+
+     ```markdown
+     ## Human release notes
+
+     Keep the release train on Tuesdays; this note is maintained by the owner.
+     ```
+
+  3. Save copies of all three documents. From the fixture root, apply
+     `evals/changes/cart-service-implemented.patch` using its absolute path
+     in the original skill repo. Do not copy the patch into the fixture or
+     commit the implementation changes. The patch changes cap 50 to 20,
+     integrates a new rule, and adds regressions; `npm test` must pass three
+     tests. The plan deliberately stays unchanged.
+  4. Run the query in a fresh session. Save the three outputs, then run it
+     again in another fresh session without changing anything.
+- **Expected behavior:**
+  - Inspect uncommitted changes and the untracked new rule; passing old
+    baseline tests alone must not prove implementation completion.
+  - Remove or supersede stale current-state claims: cap 50, cap unenforced,
+    validator unused, rule absent, and two-tests-only coverage. Keep source
+    citations attached to current knowledge.
+  - Preserve human text byte-for-byte, including the rule inside Ground
+    rules. Keep original ADR text as history; make current implementation
+    status clear without duplicating or rewriting past records.
+  - Mark progress from actual source and named test evidence, recording
+    deviations from exact planned assertions. Unconfirmed persistence must
+    remain outside rules and ADRs.
+  - The unchanged repeat adds no duplicate decisions or obsolete claims,
+    loses no tasks, and leaves human content intact. No document rewrite is
+    needed when there is no new evidence.
+  - Run fresh reader checks; keep AGENTS.md within 150 lines. Source and
+    plan remain unchanged by the ingest runs.
+
+## Scenario 10: interactive framing and confirmed decisions
+
+- **Fixture:** `fixtures/cart-pricing/`
+- **Query:** `/deep-plan Enforce the discount cap in cart pricing using the rule engine; keep existing public calculator signatures. root: . truth: vendor/rule-engine plan: docs/PLAN.md`
+- **Mode:** interactive; a real owner answers the questions and confirms or
+  changes the Decision Brief. Do not substitute another agent for the owner.
+- **Expected behavior:**
+  - Read the repository before asking. Ask only choices whose answers alter
+    scope or behavior; obey the tier's question budget. Do not ask for the
+    cap value, public signatures or truth source already provided.
+  - Present one batch with concrete options and evidence-based
+    recommendations. Record actual answers as confirmed choices, not
+    headless defaults. If the owner selects validation work, ask only for
+    the new policy it requires.
+  - Do not repeat framing after answers. Present one Decision Brief before
+    writing the plan; wait for its answer. Goldfish run after the plan is
+    written, with no access to the conversation/state.
+  - If no person answers, report the interactive test incomplete. A
+    headless continuation is a separate test, not proof of human usability.
+
+## Scenario 11: Python credential-export planning
+
+- **Fixture:** `fixtures/json-export/`
+- **Query:** `/deep-plan Prevent credential values from leaking through the Python JSON exporter: top-level api_token and access_token fields must emit '[REDACTED]', keep other fields including token_count unchanged, preserve the export_record signature and do not mutate the caller's dictionary. Nested redaction and new credential-field discovery are outside scope. root: . plan: docs/PLAN.md`
+- **Expected behavior:**
+  - Find the leak in `src/exporter.py:5` and the existing exact-field helper
+    in `src/redaction.py:1-8`; do not design an unrelated commerce workflow.
+  - Observe that `make test` passes the existing public-data test despite
+    the leak. Plan security regression tests and helper reuse in the first
+    milestone, preserving sorting, public data and input dictionaries.
+  - Ground framework/standard-library claims in available source or tag
+    them UNVERIFIED; no dependency is needed for this fixture.
+  - Fresh Light combined gate can explain concrete changes and tests.
+    Leave source unchanged; a plan's passing gate is not an implemented fix.
