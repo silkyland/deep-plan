@@ -4,7 +4,7 @@ description: >-
   Distills a completed deep-plan document (e.g. docs/PLAN.md) into durable
   project knowledge files: AGENTS.md (agent operating rules and verified
   ground truth), docs/ARCHITECTURE.md (component map, data flow, framework
-  mechanisms with citations), and ROADMAP.md (phased roadmap with live
+  mechanisms with citations), and ROADMAP.md (milestone roadmap with live
   status). Carries only VERIFIED evidence forward, re-checks stale claims,
   and merges into existing files instead of overwriting. Use after a
   deep-plan finishes, when the user mentions deep-plan-ingest or ingest the
@@ -24,7 +24,7 @@ files future agents actually load — so the research paid for once keeps paying
 |--------|---------|----------|
 | `AGENTS.md` | Operating rules + ground-truth facts for agents working in this repo | Every future agent session |
 | `docs/ARCHITECTURE.md` | Component map, data flow, framework mechanisms — with citations | Agents and humans exploring the system |
-| `ROADMAP.md` | The phased roadmap with live phase status | Anyone asking "what's next?" |
+| `ROADMAP.md` | The milestone roadmap with live status | Anyone asking "what's next?" |
 
 ## The Prime Directive (inherited from deep-plan)
 
@@ -43,8 +43,13 @@ files future agents actually load — so the research paid for once keeps paying
   wrong assumptions". `OPEN (goldfish)` items go to `ROADMAP.md` open
   questions.
 - The plan header says how far to trust it: `Goldfish: PASSED` uses the
-  normal staleness check; `NOT RUN` or `OPEN ITEMS` means re-verify **every**
-  cited claim before ingesting, not only those whose files changed.
+  normal staleness check; any other value (`NOT RUN`, `IN PROGRESS`,
+  `OPEN ITEMS`) means re-verify **every** cited claim before ingesting, not
+  only those whose files changed.
+- Decisions marked `UNCONFIRMED`, items marked `assumed (framing default)`,
+  and the plan's open questions are not settled. They never enter
+  `AGENTS.md` or `docs/ARCHITECTURE.md` as rules or decision records; list
+  them in `ROADMAP.md` as open questions.
 
 ## Progress checklist
 
@@ -56,7 +61,7 @@ Ingest Progress:
 - [ ] Step 2: Staleness check — re-verify claims touched since the plan was written
 - [ ] Step 3: Ingest AGENTS.md (merge, don't clobber)
 - [ ] Step 4: Ingest docs/ARCHITECTURE.md (merge, don't clobber)
-- [ ] Step 5: Ingest ROADMAP.md with phase status
+- [ ] Step 5: Ingest ROADMAP.md with milestone status
 - [ ] Step 6: Goldfish check — a fresh agent uses AGENTS.md alone
 - [ ] Step 7: Report — written / updated / skipped / dropped-as-stale
 ```
@@ -76,12 +81,20 @@ Ingest Progress:
 
 The plan was true when written; the repo has moved. Before ingesting:
 
-1. `git log --oneline <plan-file-mtime-or-date>..HEAD` — list commits since
-   the plan (or since its "Generated on" date).
-2. For every plan claim whose cited file appears in those commits, **re-open
-   the file and re-verify** before carrying the claim over.
-3. Claims that no longer hold are dropped and listed in the Step 6 report —
+1. `git log --oneline --name-only --since=<plan generated-on date>` — list commits since
+   the plan was written (use the plan's "Generated on" date; if it has none,
+   the file's modification date).
+2. Include working-tree changes (`git diff HEAD --name-only`) and untracked
+   cited files, not only commits. For every claim whose cited file changed,
+   **re-open the file and re-verify** before carrying it over. With no git
+   history or usable baseline date, re-check every cited claim.
+3. Claims that no longer hold are dropped and listed in the Step 7 report —
    never silently ingested.
+4. If a cited file does not exist at all (or the repo has no source in the
+   cited area), the claim cannot be re-verified. Carry it only with an
+   explicit "as of <plan date>, source not present at ingest" note beside
+   it, and list it in the Step 7 report. If the file existed when the plan
+   was written and is now gone, that is a stale claim: drop it.
 
 Skip nothing here: ingesting a stale "fact" into `AGENTS.md` poisons every
 future session that loads it.
@@ -127,8 +140,11 @@ fresh subagent with NO history and give it ONLY the path of the AGENTS-type
 file and read access to the repo. Ask it to: (1) state how to build, test,
 and lint; (2) name two wrong assumptions an agent would make here; (3) say
 where to find architecture and the next milestone; (4) list every point
-where it had to guess. Verify its answers against the repo. Each guess is a
-hole: fix the file, then re-run with a NEW goldfish — max 2 rounds. No
+where it had to guess. Verify its answers against the repo. A guess about something
+the file should have said is a hole: fix the file, then re-run with a NEW
+goldfish, at most 2 rounds. A guess about something the plan never
+established (a flag name, a registration mechanism) is not a hole in the
+file: do not invent the answer; list it in ROADMAP.md as an open question. No
 subagent support: say so in the report and skip.
 
 ## Step 7 — Report

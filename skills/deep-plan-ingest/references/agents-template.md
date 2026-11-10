@@ -40,7 +40,7 @@ unless warned. This is the highest-value section.>
 ## Where knowledge lives
 
 - Architecture and data flow: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Current phase and what's next: [ROADMAP.md](ROADMAP.md)
+- Current milestone and what's next: [ROADMAP.md](ROADMAP.md)
 - Full research and decisions record: [docs/PLAN.md](docs/PLAN.md)
 ```
 

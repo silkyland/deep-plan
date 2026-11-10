@@ -1,7 +1,8 @@
 # ROADMAP.md Template
 
 The living answer to "where are we and what's next?". Ingested from plan
-section 8 (milestones M0…) and section 9 (risk register), then kept current:
+section 8 (milestones M0…), section 9 (risk register), and the plan's
+Open questions and `UNCONFIRMED` decisions, then kept current:
 re-running deep-plan-ingest updates statuses instead of rewriting the file.
 
 Status vocabulary (use exactly these): `done` / `in-progress` / `blocked` /
@@ -27,6 +28,7 @@ Status vocabulary (use exactly these): `done` / `in-progress` / `blocked` /
 
 ### M<N>: <name> — <status>
 - **Objective:** <one line>
+- **Entry criteria:** <what must be true to start; from the plan>
 - **Exit criteria:** <verifiable statement — a command passes, a behavior is observable>
 - **Tasks:**
   - [x] <completed task — keep, it is the changelog>

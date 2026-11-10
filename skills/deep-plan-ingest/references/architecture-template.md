@@ -4,8 +4,12 @@ The system map for anyone (agent or human) who needs to understand the code
 before touching it. Depth lives here so `AGENTS.md` can stay lean.
 
 Ingest from the plan: section 2 (current state inventory), section 3
-(framework ground truth), section 7 (design decisions — as ADR-style
-records). **Keep citations.** An architecture doc without file paths degrades
+(framework ground truth), section 7 (design decisions) and, when the plan
+has one, section 11 (the change log) as ADR-style records. Decisions marked `UNCONFIRMED` are not
+records yet; they go to ROADMAP.md as open questions. Date each record
+with its change-log entry, or with the plan's generation date for section 7.
+The plan has no Responsibility column; fill it from the cited file, one
+line. **Keep citations.** An architecture doc without file paths degrades
 into folklore within weeks.
 
 ---

@@ -1,0 +1,20 @@
+[
+  {"query": "Before we touch anything, plan how to move cart pricing onto the rule engine. I want it researched against the vendor code.", "should_trigger": true},
+  {"query": "/deep-plan Migrate the session store from Redis to Postgres", "should_trigger": true},
+  {"query": "Design the multi-tenant billing refactor first. Don't write code yet, I need a plan I can hand to another agent.", "should_trigger": true},
+  {"query": "Audit the checkout module and tell me what's actually wired before we decide how to add subscriptions.", "should_trigger": true},
+  {"query": "We need to upgrade from Shopware 6.6 to 6.7 across twelve plugins. Work out the plan and the order.", "should_trigger": true},
+  {"query": "I have a plan in docs/PLAN.md. Have a fresh agent stress-test it before I start implementing.", "should_trigger": true},
+  {"query": "Run the elephant/goldfish process on the notification service rewrite.", "should_trigger": true},
+  {"query": "Architect the new import pipeline: what exists, what's missing, and what we build first.", "should_trigger": true},
+  {"query": "Fix the typo in the README title.", "should_trigger": false},
+  {"query": "Rename the variable `tmp` to `lineTotal` in PriceCalculator.js.", "should_trigger": false},
+  {"query": "Why does this test fail? Here's the stack trace.", "should_trigger": false},
+  {"query": "Add a null check to applyDiscount.", "should_trigger": false},
+  {"query": "Plan my week: I have three meetings and a deadline on Friday.", "should_trigger": false},
+  {"query": "Explain how the rule engine decides which rule fires.", "should_trigger": false},
+  {"query": "Review this pull request for bugs.", "should_trigger": false},
+  {"query": "Take docs/PLAN.md and turn it into AGENTS.md and a roadmap.", "should_trigger": false},
+  {"query": "Implement milestone M0 from docs/PLAN.md.", "should_trigger": false},
+  {"query": "What's the plan for lunch? Also bump the version to 1.2.0.", "should_trigger": false}
+]

@@ -1,7 +1,0 @@
-{
-  "name": "goldfish-gap",
-  "version": "1.0.0",
-  "private": true,
-  "description": "A finished-looking plan whose Phase 0 cites a config key and file that do not exist — deep-plan goldfish eval fixture",
-  "main": "src/cart/PriceCalculator.js"
-}

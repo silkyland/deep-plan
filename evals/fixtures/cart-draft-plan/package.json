@@ -1,0 +1,7 @@
+{
+  "name": "cart-draft-plan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cart pricing module",
+  "main": "src/cart/PriceCalculator.js"
+}

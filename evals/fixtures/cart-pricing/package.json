@@ -1,0 +1,7 @@
+{
+  "name": "cart-pricing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cart pricing module with admin settings",
+  "main": "src/index.js"
+}
